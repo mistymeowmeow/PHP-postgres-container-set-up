@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+  ums_app:
+    container_name: app
+    build: .
+    command: bash -c "chmod 755 /mount.sh && /mount.sh && apachectl -D FOREGROUND"
+    volumes:
+      - .:/var/www/html
+      - ./mount.sh:/mount.sh
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+      - NET_ADMIN
+    ports:
+      - 5000:80
+    depends_on:
+      - db
+      - db-test
+
+  db:
+    image: postgres:9.6.21
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+    container_name: app_db
+    ports:
+      - 54321:5432
+    restart: 'no'
+    volumes:
+      - ../postgres-data-sample:/var/lib/postgresql/data
+
+  db-test:
+    image: postgres:9.6.21
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: user
+      POSTGRES_DB: db_test
+    container_name: app_db_test
+    ports:
+      - 54322:5432
+    restart: 'no'
+    volumes:
+      - ../postgres-data-sample:/var/lib/postgresql/data
