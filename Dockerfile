@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y libicu-dev libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
-#remote vpn issue, use the smnvpn.cf.ac.uk (admin) VPN 
 RUN apt-get update && apt-get install -y ldap-utils
 RUN apt-get update && apt-get install -y iproute2
 
